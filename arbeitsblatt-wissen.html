@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arbeitsblatt – Clip Wissen</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@700;800;900&family=DM+Sans:wght@400;500;700&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: #0f0f1a; padding: 20px 16px 60px; color: #fff; min-height: 100vh; }
+  .wrap { max-width: 680px; margin: 0 auto; }
+  .header { background: linear-gradient(135deg, #f59e0b 0%, #6366f1 100%); border-radius: 20px; padding: 24px 22px 20px; margin-bottom: 20px; text-align: center; }
+  .header .emoji { font-size: 2.5rem; display: block; margin-bottom: 8px; }
+  .header h1 { font-family: 'Outfit', sans-serif; font-size: 1.5rem; font-weight: 900; color: #fff; margin-bottom: 4px; }
+  .header p { font-size: 0.85rem; color: rgba(255,255,255,0.8); }
+  .name-box { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+  .name-box label { font-size: 0.85rem; font-weight: 700; color: rgba(255,255,255,0.6); white-space: nowrap; }
+  .name-box input { flex: 1; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 8px 12px; color: #fff; font-size: 0.9rem; font-family: 'DM Sans', sans-serif; outline: none; }
+  .section-label { font-size: 0.68rem; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; color: #f59e0b; margin: 24px 0 10px; display: flex; align-items: center; gap: 8px; }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: rgba(245,158,11,0.3); }
+  .q-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 18px; margin-bottom: 14px; }
+  .q-num { font-size: 0.68rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #f59e0b; margin-bottom: 8px; }
+  .q-text { font-size: 0.96rem; font-weight: 700; color: #fff; line-height: 1.4; margin-bottom: 14px; }
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .option { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.04); border: 1.5px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 10px 14px; cursor: pointer; transition: all 0.2s; user-select: none; }
+  .option:hover { background: rgba(245,158,11,0.1); border-color: rgba(245,158,11,0.4); }
+  .option.selected { background: rgba(245,158,11,0.15); border-color: #f59e0b; }
+  .option.correct { background: rgba(16,185,129,0.2); border-color: #10b981; }
+  .option.wrong { background: rgba(239,68,68,0.15); border-color: #ef4444; }
+  .option-circle { width: 24px; height: 24px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; }
+  .option.selected .option-circle { border-color: #f59e0b; background: #f59e0b; color: #000; }
+  .option.correct .option-circle { border-color: #10b981; background: #10b981; color: #fff; }
+  .option.wrong .option-circle { border-color: #ef4444; background: #ef4444; color: #fff; }
+  .option-text { font-size: 0.88rem; color: rgba(255,255,255,0.85); line-height: 1.4; }
+  .feedback { display: none; margin-top: 10px; padding: 10px 14px; border-radius: 10px; font-size: 0.84rem; line-height: 1.5; }
+  .feedback.show { display: block; }
+  .feedback.ok { background: rgba(16,185,129,0.12); border-left: 3px solid #10b981; color: #6ee7b7; }
+  .feedback.nok { background: rgba(239,68,68,0.12); border-left: 3px solid #ef4444; color: #fca5a5; }
+  .sort-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 18px; margin-bottom: 14px; }
+  .sort-card .q-num { color: #f59e0b; }
+  .sort-items { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+  .sort-item { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 10px 14px; }
+  .sort-num-input { width: 36px; height: 36px; background: rgba(245,158,11,0.15); border: 1.5px solid rgba(245,158,11,0.4); border-radius: 8px; color: #fbbf24; font-size: 1rem; font-weight: 800; text-align: center; outline: none; font-family: 'Outfit', sans-serif; flex-shrink: 0; }
+  .match-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 18px; margin-bottom: 14px; }
+  .match-card .q-num { color: #34d399; }
+  .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+  .match-left { background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.3); border-radius: 10px; padding: 10px 12px; font-size: 0.86rem; font-weight: 700; color: #6ee7b7; }
+  .match-right select { width: 100%; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; padding: 10px 12px; color: #fff; font-size: 0.84rem; font-family: 'DM Sans', sans-serif; outline: none; }
+  .match-right select option { background: #1a1a2e; color: #fff; }
+  .write-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 18px; margin-bottom: 14px; }
+  .write-card .q-num { color: #a78bfa; }
+  .write-card textarea { width: 100%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 10px 14px; color: #fff; font-size: 0.88rem; font-family: 'DM Sans', sans-serif; resize: none; outline: none; margin-top: 10px; line-height: 1.6; }
+  .write-card .hint { font-size: 0.78rem; color: rgba(255,255,255,0.4); margin-top: 6px; font-style: italic; }
+  .btn-row { display: flex; gap: 10px; margin-top: 20px; }
+  .submit-btn { flex: 1; background: linear-gradient(135deg, #f59e0b, #6366f1); border: none; border-radius: 14px; padding: 16px; color: #fff; font-family: 'Outfit', sans-serif; font-size: 1rem; font-weight: 800; cursor: pointer; }
+  .print-btn { background: rgba(255,255,255,0.08); border: 1.5px solid rgba(255,255,255,0.2); border-radius: 14px; padding: 16px 20px; color: rgba(255,255,255,0.8); font-family: 'Outfit', sans-serif; font-size: 0.9rem; font-weight: 700; cursor: pointer; }
+  .result-box { display: none; background: rgba(255,255,255,0.05); border: 1.5px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 24px; text-align: center; margin-top: 20px; }
+  .result-box.show { display: block; }
+  .result-emoji { font-size: 3rem; display: block; margin-bottom: 10px; }
+  .result-score { font-family: 'Outfit', sans-serif; font-size: 2rem; font-weight: 900; color: #f59e0b; }
+  .result-text { font-size: 0.9rem; color: rgba(255,255,255,0.7); margin-top: 6px; line-height: 1.6; }
+  .reset-btn { margin-top: 16px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 8px 24px; color: rgba(255,255,255,0.7); font-size: 0.84rem; font-weight: 700; cursor: pointer; }
+  @media print {
+    body { background: #fff; color: #000; padding: 10mm; }
+    .header { background: #f59e0b !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .btn-row, .reset-btn { display: none !important; }
+    .q-card, .write-card, .sort-card, .match-card, .name-box { background: #f9f9f9 !important; border: 1px solid #ddd !important; color: #000 !important; }
+    .q-text, .option-text { color: #000 !important; }
+    .option { border: 1px solid #ccc !important; background: #fff !important; }
+    textarea { border: 1px solid #ccc !important; background: #fff !important; color: #000 !important; min-height: 60px; }
+    .result-box, .feedback { display: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <span class="emoji">💡</span>
+    <h1>Arbeitsblatt – Clip Wissen</h1>
+    <p>Teste dein Wissen – du schaffst das! 💪</p>
+    <div style="margin-top:16px; display:flex; flex-direction:column; align-items:center; gap:8px;">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://6t72czvbdp-skizze.github.io/Film-ag/arbeitsblatt-wissen.html&bgcolor=ffffff&color=000000" style="border-radius:10px; width:110px; height:110px;">
+      <div style="font-size:0.75rem; color:rgba(255,255,255,0.7);">Mit iPad einscannen</div>
+    </div>
+  </div>
+
+  <div class="name-box">
+    <label>👤 Name:</label>
+    <input type="text" placeholder="Dein Name hier ...">
+  </div>
+
+  <div class="section-label">🎯 Teil 1 – Wissen testen</div>
+
+  <div class="q-card">
+    <div class="q-num">Frage 1 von 4</div>
+    <div class="q-text">Was macht einen guten Wissens-Clip aus?</div>
+    <div class="options">
+      <div class="option" onclick="sel(this,1,false)"><div class="option-circle">A</div><div class="option-text">Möglichst viele Fakten ohne Erklärung auflisten.</div></div>
+      <div class="option" onclick="sel(this,1,true)"><div class="option-circle">B</div><div class="option-text">Wenige, aber spannende Fakten verständlich erklären – mit Bildern oder Modellen.</div></div>
+      <div class="option" onclick="sel(this,1,false)"><div class="option-circle">C</div><div class="option-text">Einfach vorlesen was im Internet steht.</div></div>
+    </div>
+    <div class="feedback" id="fb1"></div>
+  </div>
+
+  <div class="q-card">
+    <div class="q-num">Frage 2 von 4</div>
+    <div class="q-text">Wie kann man einen schwierigen Sachverhalt gut zeigen?</div>
+    <div class="options">
+      <div class="option" onclick="sel(this,2,false)"><div class="option-circle">A</div><div class="option-text">Gar nicht – es reicht wenn man darüber spricht.</div></div>
+      <div class="option" onclick="sel(this,2,true)"><div class="option-circle">B</div><div class="option-text">Mit Alltagsgegenständen als Modelle – z.B. ein Ball als Erde, eine Lampe als Sonne.</div></div>
+      <div class="option" onclick="sel(this,2,false)"><div class="option-circle">C</div><div class="option-text">Immer mit echten Fotos aus dem Internet.</div></div>
+    </div>
+    <div class="feedback" id="fb2"></div>
+  </div>
+
+  <div class="q-card">
+    <div class="q-num">Frage 3 von 4</div>
+    <div class="q-text">Wie spricht man einen Text am besten ein?</div>
+    <div class="options">
+      <div class="option" onclick="sel(this,3,false)"><div class="option-circle">A</div><div class="option-text">So schnell wie möglich, damit alles reinpasst.</div></div>
+      <div class="option" onclick="sel(this,3,false)"><div class="option-circle">B</div><div class="option-text">Flüstern, damit es ruhig klingt.</div></div>
+      <div class="option" onclick="sel(this,3,true)"><div class="option-circle">C</div><div class="option-text">Langsam, deutlich und in kurzen Sätzen – vorher laut üben!</div></div>
+    </div>
+    <div class="feedback" id="fb3"></div>
+  </div>
+
+  <div class="q-card">
+    <div class="q-num">Frage 4 von 4</div>
+    <div class="q-text">Was überprüfst du bevor du den Clip speicherst?</div>
+    <div class="options">
+      <div class="option" onclick="sel(this,4,false)"><div class="option-circle">A</div><div class="option-text">Nichts – einfach speichern und fertig.</div></div>
+      <div class="option" onclick="sel(this,4,true)"><div class="option-circle">B</div><div class="option-text">Ob Ton und Bild zusammenpassen und alles gut verständlich ist.</div></div>
+      <div class="option" onclick="sel(this,4,false)"><div class="option-circle">C</div><div class="option-text">Ob das Video lang genug ist.</div></div>
+    </div>
+    <div class="feedback" id="fb4"></div>
+  </div>
+
+  <div class="section-label">🔢 Teil 2 – Richtige Reihenfolge</div>
+
+  <div class="sort-card">
+    <div class="q-num">Aufgabe 5</div>
+    <div class="q-text">Bringe die Schritte eines Wissens-Clips in die richtige Reihenfolge.<br><span style="font-size:0.82rem;font-weight:400;color:rgba(255,255,255,0.5);">Schreibe die Zahlen 1–5 in die Felder.</span></div>
+    <div class="sort-items">
+      <div class="sort-item"><input class="sort-num-input" type="number" min="1" max="5" placeholder="?"><span style="font-size:0.88rem;color:rgba(255,255,255,0.85);">Fakten recherchieren</span></div>
+      <div class="sort-item"><input class="sort-num-input" type="number" min="1" max="5" placeholder="?"><span style="font-size:0.88rem;color:rgba(255,255,255,0.85);">Thema wählen</span></div>
+      <div class="sort-item"><input class="sort-num-input" type="number" min="1" max="5" placeholder="?"><span style="font-size:0.88rem;color:rgba(255,255,255,0.85);">Ton und Bild zusammenschneiden</span></div>
+      <div class="sort-item"><input class="sort-num-input" type="number" min="1" max="5" placeholder="?"><span style="font-size:0.88rem;color:rgba(255,255,255,0.85);">Text einsprechen</span></div>
+      <div class="sort-item"><input class="sort-num-input" type="number" min="1" max="5" placeholder="?"><span style="font-size:0.88rem;color:rgba(255,255,255,0.85);">Szene oder Modell überlegen</span></div>
+    </div>
+  </div>
+
+  <div class="section-label">🔗 Teil 3 – Zuordnen</div>
+
+  <div class="match-card">
+    <div class="q-num">Aufgabe 6</div>
+    <div class="q-text">Ordne die Begriffe den richtigen Erklärungen zu.</div>
+    <div class="match-grid">
+      <div class="match-left">💡 Fakt</div>
+      <div class="match-right"><select><option value="">– Wählen –</option><option>Eine bewiesene Information</option><option>Eine erfundene Geschichte</option><option>Ein Werkzeug zum Filmen</option><option>Eine Meinung ohne Beweis</option></select></div>
+      <div class="match-left">🎙️ Einsprechen</div>
+      <div class="match-right"><select><option value="">– Wählen –</option><option>Eine bewiesene Information</option><option>Den Text mit der Stimme aufnehmen</option><option>Ein Werkzeug zum Filmen</option><option>Eine Meinung ohne Beweis</option></select></div>
+      <div class="match-left">🎬 Schnitt</div>
+      <div class="match-right"><select><option value="">– Wählen –</option><option>Eine bewiesene Information</option><option>Den Text mit der Stimme aufnehmen</option><option>Ton und Bild zusammenfügen</option><option>Eine Meinung ohne Beweis</option></select></div>
+      <div class="match-left">🔍 Recherche</div>
+      <div class="match-right"><select><option value="">– Wählen –</option><option>Informationen suchen und prüfen</option><option>Den Text mit der Stimme aufnehmen</option><option>Ton und Bild zusammenfügen</option><option>Eine Meinung ohne Beweis</option></select></div>
+    </div>
+  </div>
+
+  <div class="section-label">✏️ Teil 4 – Eigene Ideen</div>
+
+  <div class="write-card">
+    <div class="q-num">Aufgabe 7</div>
+    <div class="q-text">Welches Thema würdest du für deinen Wissens-Clip wählen? Schreibe 2–3 Fakten dazu auf.</div>
+    <textarea rows="4" placeholder="Mein Thema: &#10;Fakt 1: &#10;Fakt 2: &#10;Fakt 3: "></textarea>
+    <div class="hint">💡 Tipp: Suche nach überraschenden oder lustigen Fakten – die bleiben am besten im Gedächtnis!</div>
+  </div>
+
+  <div class="write-card">
+    <div class="q-num">Aufgabe 8</div>
+    <div class="q-text">Wie könntest du deinen Fakt mit Alltagsgegenständen zeigen? Beschreibe deine Idee.</div>
+    <textarea rows="4" placeholder="Meine Idee: Ich würde ... nehmen um zu zeigen, dass ..."></textarea>
+  </div>
+
+  <div class="write-card">
+    <div class="q-num">Aufgabe 9 – Zusatz ⭐</div>
+    <div class="q-text">Schreibe einen kurzen Einleitungssatz für deinen Wissens-Clip – wie bei einer Dokusendung!</div>
+    <textarea rows="4" placeholder="Wusstest du, dass ...? Heute zeigen wir euch ..."></textarea>
+    <div class="hint">💡 Echte Dokus beginnen oft mit einer überraschenden Frage oder einem erstaunlichen Fakt.</div>
+  </div>
+
+  <div class="btn-row">
+    <button class="submit-btn" onclick="auswerten()">💡 Auswerten</button>
+    <button class="print-btn" onclick="window.print()">🖨️ Als PDF drucken</button>
+  </div>
+
+  <div class="result-box" id="result">
+    <span class="result-emoji" id="result-emoji">⭐</span>
+    <div class="result-score" id="result-score"></div>
+    <div class="result-text" id="result-text"></div>
+    <button class="reset-btn" onclick="location.reload()">↩ Nochmal versuchen</button>
+  </div>
+
+</div>
+<script>
+  const answers = {};
+  const correct = {1:'B', 2:'B', 3:'C', 4:'B'};
+  const feedbacks = {
+    1: { ok: '✅ Richtig! Wenige, gut erklärte Fakten mit Visualisierung machen einen starken Wissens-Clip.', nok: '❌ Ein guter Wissens-Clip erklärt wenige Fakten verständlich – mit Bildern oder Modellen. Antwort B.' },
+    2: { ok: '✅ Super! Alltagsgegenstände als Modelle helfen, komplizierte Dinge einfach zu zeigen.', nok: '❌ Alltagsgegenstände als Modelle sind perfekt – z.B. ein Ball als Erde. Antwort B.' },
+    3: { ok: '✅ Genau! Langsam, deutlich und geübt – so klingt ein guter Kommentar.', nok: '❌ Langsam, deutlich sprechen und vorher üben – Antwort C ist richtig.' },
+    4: { ok: '✅ Richtig! Ton und Bild müssen zusammenpassen und alles muss verständlich sein.', nok: '❌ Vor dem Speichern prüfen ob Ton und Bild passen – Antwort B.' },
+  };
+  function sel(el, qNum, isCorrect) {
+    el.parentElement.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    answers[qNum] = { el, isCorrect };
+  }
+  function auswerten() {
+    let score = 0;
+    for (let i = 1; i <= 4; i++) {
+      const fb = document.getElementById('fb' + i);
+      if (answers[i]) {
+        const { el, isCorrect } = answers[i];
+        el.parentElement.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+        if (isCorrect) {
+          el.classList.add('correct'); score++;
+          fb.className = 'feedback show ok'; fb.textContent = feedbacks[i].ok;
+        } else {
+          el.classList.add('wrong');
+          fb.className = 'feedback show nok'; fb.textContent = feedbacks[i].nok;
+          el.parentElement.querySelectorAll('.option').forEach(o => {
+            if (o.querySelector('.option-circle').textContent === correct[i]) o.classList.add('correct');
+          });
+        }
+      } else { fb.className = 'feedback show nok'; fb.textContent = '⚠️ Diese Frage wurde nicht beantwortet.'; }
+    }
+    const result = document.getElementById('result');
+    result.classList.add('show');
+    document.getElementById('result-score').textContent = score + ' von 4 Multiple-Choice richtig';
+    if (score === 4) { document.getElementById('result-emoji').textContent = '🏆'; document.getElementById('result-text').textContent = 'Perfekt! Du hast alles richtig – du bist ein echter Wissens-Clip-Profi!'; }
+    else if (score >= 2) { document.getElementById('result-emoji').textContent = '⭐'; document.getElementById('result-text').textContent = 'Gut gemacht! Schau dir die falschen Antworten nochmal an.'; }
+    else { document.getElementById('result-emoji').textContent = '💪'; document.getElementById('result-text').textContent = 'Schau dir die Themen nochmal an – du schaffst das!'; }
+    result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+</script>
+</body>
+</html>

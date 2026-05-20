@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arbeitsblatt – Clip Check</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@700;800;900&family=DM+Sans:wght@400;500;700&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: #0f0f1a; padding: 20px 16px 60px; color: #fff; min-height: 100vh; }
+  .wrap { max-width: 680px; margin: 0 auto; }
+  .header { background: linear-gradient(135deg, #10b981 0%, #0ea5e9 100%); border-radius: 20px; padding: 24px 22px 20px; margin-bottom: 20px; text-align: center; }
+  .header .emoji { font-size: 2.5rem; display: block; margin-bottom: 8px; }
+  .header h1 { font-family: 'Outfit', sans-serif; font-size: 1.5rem; font-weight: 900; color: #fff; margin-bottom: 4px; }
+  .header p { font-size: 0.85rem; color: rgba(255,255,255,0.8); }
+  .name-box { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+  .name-box label { font-size: 0.85rem; font-weight: 700; color: rgba(255,255,255,0.6); white-space: nowrap; }
+  .name-box input { flex: 1; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 8px 12px; color: #fff; font-size: 0.9rem; font-family: 'DM Sans', sans-serif; outline: none; }
+  .section-label { font-size: 0.68rem; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; color: #34d399; margin: 24px 0 10px; display: flex; align-items: center; gap: 8px; }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: rgba(52,211,153,0.3); }
+  .q-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 18px; margin-bottom: 14px; }
+  .q-num { font-size: 0.68rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #34d399; margin-bottom: 8px; }
+  .q-text { font-size: 0.96rem; font-weight: 700; color: #fff; line-height: 1.4; margin-bottom: 14px; }
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .option { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.04); border: 1.5px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 10px 14px; cursor: pointer; transition: all 0.2s; user-select: none; }
+  .option:hover { background: rgba(16,185,129,0.1); border-color: rgba(16,185,129,0.4); }
+  .option.selected { background: rgba(16,185,129,0.15); border-color: #10b981; }
+  .option.correct { background: rgba(16,185,129,0.2); border-color: #10b981; }
+  .option.wrong { background: rgba(239,68,68,0.15); border-color: #ef4444; }
+  .option-circle { width: 24px; height: 24px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; }
+  .option.selected .option-circle { border-color: #10b981; background: #10b981; color: #fff; }
+  .option.correct .option-circle { border-color: #10b981; background: #10b981; color: #fff; }
+  .option.wrong .option-circle { border-color: #ef4444; background: #ef4444; color: #fff; }
+  .option-text { font-size: 0.88rem; color: rgba(255,255,255,0.85); line-height: 1.4; }
+  .feedback { display: none; margin-top: 10px; padding: 10px 14px; border-radius: 10px; font-size: 0.84rem; line-height: 1.5; }
+  .feedback.show { display: block; }
+  .feedback.ok { background: rgba(16,185,129,0.12); border-left: 3px solid #10b981; color: #6ee7b7; }
+  .feedback.nok { background: rgba(239,68,68,0.12); border-left: 3px solid #ef4444; color: #fca5a5; }
+  .sort-card, .match-card, .write-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 18px; margin-bottom: 14px; }
+  .sort-items { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+  .sort-item { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 10px 14px; }
+  .sort-num-input { width: 36px; height: 36px; background: rgba(16,185,129,0.15); border: 1.5px solid rgba(16,185,129,0.4); border-radius: 8px; color: #34d399; font-size: 1rem; font-weight: 800; text-align: center; outline: none; font-family: 'Outfit', sans-serif; flex-shrink: 0; }
+  .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+  .match-left { background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.3); border-radius: 10px; padding: 10px 12px; font-size: 0.86rem; font-weight: 700; color: #6ee7b7; }
+  .match-right select { width: 100%; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; padding: 10px 12px; color: #fff; font-size: 0.84rem; font-family: 'DM Sans', sans-serif; outline: none; }
+  .match-right select option { background: #1a1a2e; }
+  .write-card textarea { width: 100%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 10px 14px; color: #fff; font-size: 0.88rem; font-family: 'DM Sans', sans-serif; resize: none; outline: none; margin-top: 10px; line-height: 1.6; }
+  .hint { font-size: 0.78rem; color: rgba(255,255,255,0.4); margin-top: 6px; font-style: italic; }
+  .btn-row { display: flex; gap: 10px; margin-top: 20px; }
+  .submit-btn { flex: 1; background: linear-gradient(135deg, #10b981, #0ea5e9); border: none; border-radius: 14px; padding: 16px; color: #fff; font-family: 'Outfit', sans-serif; font-size: 1rem; font-weight: 800; cursor: pointer; }
+  .print-btn { background: rgba(255,255,255,0.08); border: 1.5px solid rgba(255,255,255,0.2); border-radius: 14px; padding: 16px 20px; color: rgba(255,255,255,0.8); font-family: 'Outfit', sans-serif; font-size: 0.9rem; font-weight: 700; cursor: pointer; }
+  .result-box { display: none; background: rgba(255,255,255,0.05); border: 1.5px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 24px; text-align: center; margin-top: 20px; }
+  .result-box.show { display: block; }
+  .result-emoji { font-size: 3rem; display: block; margin-bottom: 10px; }
+  .result-score { font-family: 'Outfit', sans-serif; font-size: 2rem; font-weight: 900; color: #10b981; }
+  .result-text { font-size: 0.9rem; color: rgba(255,255,255,0.7); margin-top: 6px; line-height: 1.6; }
+  .reset-btn { margin-top: 16px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 8px 24px; color: rgba(255,255,255,0.7); font-size: 0.84rem; font-weight: 700; cursor: pointer; }
+  @media print {
+    body { background: #fff; color: #000; padding: 10mm; }
+    .header { background: #10b981 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .btn-row, .reset-btn, .feedback, .result-box { display: none !important; }
+    .q-card, .write-card, .sort-card, .match-card, .name-box { background: #f9f9f9 !important; border: 1px solid #ddd !important; color: #000 !important; }
+    .q-text, .option-text { color: #000 !important; }
+    .option { border: 1px solid #ccc !important; background: #fff !important; }
+    textarea { border: 1px solid #ccc !important; background: #fff !important; color: #000 !important; min-height: 60px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <span class="emoji">🔬</span>
+    <h1>Arbeitsblatt – Clip Check</h1>
+    <p>Stimmt das wirklich? Teste dein Forschergehirn! 🧪</p>
+    <div style="margin-top:16px; display:flex; flex-direction:column; align-items:center; gap:8px;">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://6t72czvbdp-skizze.github.io/Film-ag/arbeitsblatt-check.html&bgcolor=ffffff&color=000000" style="border-radius:10px; width:110px; height:110px;">
+      <div style="font-size:0.75rem; color:rgba(255,255,255,0.7);">Mit iPad einscannen</div>
+    </div>
+  </div>
+
+  <div class="name-box">
+    <label>👤 Name:</label>
+    <input type="text" placeholder="Dein Name hier ...">
+  </div>
+
+  <div class="section-label">🎯 Teil 1 – Wissen testen</div>
+
+  <div class="q-card">
+    <div class="q-num">Frage 1 von 4</div>
+    <div class="q-text">Worum geht es beim Clip: Check?</div>
+    <div class="options">
+      <div class="option" onclick="sel(this,1,false)"><div class="option-circle">A</div><div class="option-text">Wir kontrollieren ob alle Kinder anwesend sind.</div></div>
+      <div class="option" onclick="sel(this,1,true)"><div class="option-circle">B</div><div class="option-text">Wir testen ob Behauptungen aus dem Alltag wirklich stimmen und filmen das Ergebnis.</div></div>
+      <div class="option" onclick="sel(this,1,false)"><div class="option-circle">C</div><div class="option-text">Wir schauen Videos aus dem Internet und prüfen ob sie lustig sind.</div></div>
+    </div>
+    <div class="feedback" id="fb1"></div>
+  </div>
+
+  <div class="q-card">
+    <div class="q-num">Frage 2 von 4</div>
+    <div class="q-text">Was ist eine Hypothese?</div>
+    <div class="options">
+      <div class="option" onclick="sel(this,2,true)"><div class="option-circle">A</div><div class="option-text">Eine Vermutung die man noch testen muss – stimmt das oder nicht?</div></div>
+      <div class="option" onclick="sel(this,2,false)"><div class="option-circle">B</div><div class="option-text">Ein bewiesener Fakt aus einem Schulbuch.</div></div>
+      <div class="option" onclick="sel(this,2,false)"><div class="option-circle">C</div><div class="option-text">Ein Werkzeug das man zum Filmen braucht.</div></div>
+    </div>
+    <div class="feedback" id="fb2"></div>
+  </div>
+
+  <div class="q-card">
+    <div class="q-num">Frage 3 von 4</div>
+    <div class="q-text">Was machst du wenn ein Versuch nicht funktioniert?</div>
+    <div class="options">
+      <div class="option" onclick="sel(this,3,false)"><div class="option-circle">A</div><div class="option-text">Aufhören und ein anderes Thema wählen.</div></div>
+      <div class="option" onclick="sel(this,3,false)"><div class="option-circle">B</div><div class="option-text">Das Ergebnis verändern damit es passt.</div></div>
+      <div class="option" onclick="sel(this,3,true)"><div class="option-circle">C</div><div class="option-text">Trotzdem filmen – auch Fehler sind spannend und gehören zum Forschen dazu!</div></div>
+    </div>
+    <div class="feedback" id="fb3"></div>
+  </div>
+
+  <div class="q-card">
+    <div class="q-num">Frage 4 von 4</div>
+    <div class="q-text">Worauf muss man beim Filmen eines Experiments achten?</div>
+    <div class="options">
+      <div class="option" onclick="sel(this,4,false)"><div class="option-circle">A</div><div class="option-text">Die Kamera so weit weg wie möglich halten.</div></div>
+      <div class="option" onclick="sel(this,4,true)"><div class="option-circle">B</div><div class="option-text">Kamera ruhig halten, deutlich sprechen und wichtige Momente aufnehmen.</div></div>
+      <div class="option" onclick="sel(this,4,false)"><div class="option-circle">C</div><div class="option-text">Möglichst schnell filmen damit alles reinpasst.</div></div>
+    </div>
+    <div class="feedback" id="fb4"></div>
+  </div>
+
+  <div class="section-label">🔢 Teil 2 – Richtige Reihenfolge</div>
+
+  <div class="sort-card">
+    <div class="q-num">Aufgabe 5</div>
+    <div class="q-text">Bringe die Schritte eines Check-Clips in die richtige Reihenfolge.<br><span style="font-size:0.82rem;font-weight:400;color:rgba(255,255,255,0.5);">Schreibe die Zahlen 1–5.</span></div>
+    <div class="sort-items">
+      <div class="sort-item"><input class="sort-num-input" type="number" min="1" max="5" placeholder="?"><span style="font-size:0.88rem;color:rgba(255,255,255,0.85);">Ergebnis kommentieren & Clip schneiden</span></div>
+      <div class="sort-item"><input class="sort-num-input" type="number" min="1" max="5" placeholder="?"><span style="font-size:0.88rem;color:rgba(255,255,255,0.85);">Behauptung oder Idee wählen</span></div>
+      <div class="sort-item"><input class="sort-num-input" type="number" min="1" max="5" placeholder="?"><span style="font-size:0.88rem;color:rgba(255,255,255,0.85);">Versuch filmen & erklären</span></div>
+      <div class="sort-item"><input class="sort-num-input" type="number" min="1" max="5" placeholder="?"><span style="font-size:0.88rem;color:rgba(255,255,255,0.85);">Vermutung aufstellen</span></div>
+      <div class="sort-item"><input class="sort-num-input" type="number" min="1" max="5" placeholder="?"><span style="font-size:0.88rem;color:rgba(255,255,255,0.85);">Material vorbereiten</span></div>
+    </div>
+  </div>
+
+  <div class="section-label">✏️ Teil 3 – Eigene Ideen</div>
+
+  <div class="write-card">
+    <div class="q-num">Aufgabe 6</div>
+    <div class="q-text">Schreibe eine Behauptung auf die du gerne testen würdest. Was ist deine Vermutung?</div>
+    <textarea rows="4" placeholder="Behauptung: Ich glaube, dass ...&#10;Meine Vermutung: Ich denke, das stimmt / stimmt nicht, weil ..."></textarea>
+    <div class="hint">💡 Ideen: Schwimmt Holz immer? Kann man mit Backpulver einen Vulkan bauen?</div>
+  </div>
+
+  <div class="write-card">
+    <div class="q-num">Aufgabe 7</div>
+    <div class="q-text">Wie würdest du diesen Versuch filmen? Beschreibe was die Kamera zeigen soll.</div>
+    <textarea rows="4" placeholder="Zuerst zeige ich ... Dann filme ich ... Am Ende sieht man ..."></textarea>
+  </div>
+
+  <div class="write-card">
+    <div class="q-num">Aufgabe 8 – Zusatz ⭐</div>
+    <div class="q-text">Schreibe einen Kommentarsatz den du am Ende des Clips sprechen würdest – was habt ihr herausgefunden?</div>
+    <textarea rows="4" placeholder="Unser Ergebnis: Wir haben herausgefunden, dass ..."></textarea>
+    <div class="hint">💡 Echte Forscher sagen immer was sie gelernt haben – auch wenn das Ergebnis überraschend war!</div>
+  </div>
+
+  <div class="btn-row">
+    <button class="submit-btn" onclick="auswerten()">🔬 Auswerten</button>
+    <button class="print-btn" onclick="window.print()">🖨️ Als PDF drucken</button>
+  </div>
+
+  <div class="result-box" id="result">
+    <span class="result-emoji" id="result-emoji">⭐</span>
+    <div class="result-score" id="result-score"></div>
+    <div class="result-text" id="result-text"></div>
+    <button class="reset-btn" onclick="location.reload()">↩ Nochmal versuchen</button>
+  </div>
+
+</div>
+<script>
+  const answers = {};
+  const correct = {1:'B', 2:'A', 3:'C', 4:'B'};
+  const feedbacks = {
+    1: { ok: '✅ Richtig! Beim Check testen wir Behauptungen und filmen das Ergebnis.', nok: '❌ Beim Clip Check testen wir ob Behauptungen stimmen – Antwort B.' },
+    2: { ok: '✅ Genau! Eine Hypothese ist eine Vermutung die man noch testen muss.', nok: '❌ Eine Hypothese ist eine Vermutung – stimmt das oder nicht? Antwort A.' },
+    3: { ok: '✅ Super! Auch Fehler gehören zum Forschen – trotzdem filmen!', nok: '❌ Auch wenn es nicht klappt weitermachen – Fehler sind spannend! Antwort C.' },
+    4: { ok: '✅ Richtig! Ruhige Kamera, deutlich sprechen und wichtige Momente aufnehmen.', nok: '❌ Kamera ruhig halten, deutlich sprechen und wichtige Momente zeigen – Antwort B.' },
+  };
+  function sel(el, qNum, isCorrect) {
+    el.parentElement.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    answers[qNum] = { el, isCorrect };
+  }
+  function auswerten() {
+    let score = 0;
+    for (let i = 1; i <= 4; i++) {
+      const fb = document.getElementById('fb' + i);
+      if (answers[i]) {
+        const { el, isCorrect } = answers[i];
+        el.parentElement.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+        if (isCorrect) { el.classList.add('correct'); score++; fb.className = 'feedback show ok'; fb.textContent = feedbacks[i].ok; }
+        else { el.classList.add('wrong'); fb.className = 'feedback show nok'; fb.textContent = feedbacks[i].nok; el.parentElement.querySelectorAll('.option').forEach(o => { if (o.querySelector('.option-circle').textContent === correct[i]) o.classList.add('correct'); }); }
+      } else { fb.className = 'feedback show nok'; fb.textContent = '⚠️ Diese Frage wurde nicht beantwortet.'; }
+    }
+    const result = document.getElementById('result');
+    result.classList.add('show');
+    document.getElementById('result-score').textContent = score + ' von 4 Multiple-Choice richtig';
+    if (score === 4) { document.getElementById('result-emoji').textContent = '🏆'; document.getElementById('result-text').textContent = 'Perfekt! Du bist ein echter Forscher!'; }
+    else if (score >= 2) { document.getElementById('result-emoji').textContent = '⭐'; document.getElementById('result-text').textContent = 'Gut gemacht! Schau dir die falschen Antworten nochmal an.'; }
+    else { document.getElementById('result-emoji').textContent = '💪'; document.getElementById('result-text').textContent = 'Schau dir die Themen nochmal an – du schaffst das!'; }
+    result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+</script>
+</body>
+</html>

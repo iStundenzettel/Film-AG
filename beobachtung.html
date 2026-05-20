@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Film-AG – Beobachtungsliste</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=DM+Sans:wght@400;500;600&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: #0c0c14; color: rgba(255,255,255,0.9); min-height: 100vh; padding: 20px 16px 80px; }
+  .wrap { max-width: 680px; margin: 0 auto; }
+  .header { background: linear-gradient(135deg, #2d0036, #4a0060); border: 1px solid rgba(192,38,211,0.35); border-radius: 20px; padding: 20px; margin-bottom: 16px; display: flex; align-items: center; gap: 14px; }
+  .header h1 { font-family: 'Outfit', sans-serif; font-size: 1.25rem; font-weight: 900; color: #fff; }
+  .header p { font-size: 0.78rem; color: rgba(255,255,255,0.5); margin-top: 2px; }
+  .session-bar { background: #14141f; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 12px 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+  .session-label { font-size: 0.75rem; font-weight: 700; color: rgba(255,255,255,0.4); white-space: nowrap; }
+  .session-input { flex: 1; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 7px 12px; color: #fff; font-size: 0.86rem; font-family: 'DM Sans', sans-serif; outline: none; }
+  .session-badge { font-size: 0.7rem; font-weight: 700; background: rgba(192,38,211,0.2); border: 1px solid rgba(192,38,211,0.4); border-radius: 20px; padding: 4px 10px; color: #e879f9; white-space: nowrap; }
+  .add-row { display: flex; gap: 8px; margin-bottom: 14px; }
+  .add-input { flex: 1; background: #14141f; border: 1.5px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 12px 16px; color: #fff; font-size: 0.92rem; font-family: 'DM Sans', sans-serif; outline: none; }
+  .add-input:focus { border-color: rgba(192,38,211,0.5); }
+  .add-btn { background: #c026d3; border: none; border-radius: 12px; width: 48px; height: 48px; color: #fff; font-size: 1.4rem; font-weight: 800; cursor: pointer; flex-shrink: 0; }
+  .cat-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 8px; padding: 0 2px; }
+  .cat-head { text-align: center; font-size: 0.62rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.35); display: flex; flex-direction: column; align-items: center; gap: 3px; }
+  .cat-head span { font-size: 1rem; }
+  .child-card { background: #14141f; border: 1px solid rgba(255,255,255,0.08); border-left: 3px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 14px 14px 12px; margin-bottom: 8px; }
+  .child-card[data-avg="high"] { border-left-color: #22c55e; }
+  .child-card[data-avg="mid"]  { border-left-color: #f59e0b; }
+  .child-card[data-avg="low"]  { border-left-color: #ef4444; }
+  .child-top { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .child-avatar { width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, #c026d3, #7c3aed); display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 800; color: #fff; flex-shrink: 0; }
+  .child-name-text { font-size: 0.95rem; font-weight: 600; flex: 1; }
+  .delete-btn { background: none; border: none; color: rgba(255,255,255,0.2); font-size: 0.85rem; cursor: pointer; padding: 4px 6px; }
+  .sliders-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .slider-col { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .slider-emoji { font-size: 1.4rem; min-height: 1.5rem; line-height: 1; }
+  input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 6px; outline: none; cursor: pointer; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; cursor: pointer; border: 2px solid rgba(255,255,255,0.25); }
+  .sl-0 { background: rgba(255,255,255,0.12); }
+  .sl-0::-webkit-slider-thumb { background: rgba(255,255,255,0.3); }
+  .sl-1 { background: rgba(255,255,255,0.12); }
+  .sl-1::-webkit-slider-thumb { background: #ef4444; }
+  .sl-2 { background: rgba(255,255,255,0.12); }
+  .sl-2::-webkit-slider-thumb { background: #f97316; }
+  .sl-3 { background: rgba(255,255,255,0.12); }
+  .sl-3::-webkit-slider-thumb { background: #f59e0b; }
+  .sl-4 { background: rgba(255,255,255,0.12); }
+  .sl-4::-webkit-slider-thumb { background: #84cc16; }
+  .sl-5 { background: rgba(255,255,255,0.12); }
+  .sl-5::-webkit-slider-thumb { background: #22c55e; }
+  .summary { background: linear-gradient(135deg, #052e16, #064e3b); border: 1px solid rgba(52,211,153,0.2); border-radius: 14px; padding: 14px 16px; margin-top: 16px; display: none; }
+  .summary-row { display: flex; gap: 8px; }
+  .summary-pill { flex: 1; display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.06); border-radius: 30px; padding: 8px 12px; }
+  .dot { width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0; }
+  .dot-g { background: #22c55e; }
+  .dot-y { background: #f59e0b; }
+  .dot-r { background: #ef4444; }
+  .pill-num { font-family: 'Outfit', sans-serif; font-size: 1.1rem; font-weight: 900; color: #fff; }
+  .pill-lbl { font-size: 0.65rem; color: rgba(255,255,255,0.4); line-height: 1.3; }
+  .notes-section { background: #14141f; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 14px; margin-top: 12px; }
+  .notes-title { font-size: 0.65rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 8px; }
+  .notes-ta { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 10px 14px; color: #fff; font-size: 0.86rem; font-family: 'DM Sans', sans-serif; resize: none; outline: none; line-height: 1.6; }
+  .bottom-btns { display: flex; gap: 8px; margin-top: 14px; }
+  .save-btn { flex: 1; background: linear-gradient(135deg, #059669, #34d399); border: none; border-radius: 12px; padding: 14px; color: #fff; font-family: 'Outfit', sans-serif; font-size: 0.92rem; font-weight: 800; cursor: pointer; }
+  .sec-btn { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 14px 16px; color: rgba(255,255,255,0.55); font-family: 'Outfit', sans-serif; font-size: 0.82rem; font-weight: 700; cursor: pointer; }
+  .empty-state { text-align: center; padding: 28px; color: rgba(255,255,255,0.3); font-size: 0.88rem; }
+  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(60px); background: #059669; color: #fff; padding: 10px 20px; border-radius: 20px; font-size: 0.86rem; font-weight: 700; transition: transform 0.3s; z-index: 99; pointer-events: none; }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <div style="font-size:2rem;">📊</div>
+    <div><h1>Beobachtungsliste</h1><p>Film-AG · Schnelle Einschätzung pro Kind</p></div>
+  </div>
+  <div class="session-bar">
+    <span class="session-label">📅 Stunde:</span>
+    <input class="session-input" id="session-name" type="text" placeholder="z.B. 15. Mai – Reporter">
+    <span class="session-badge" id="child-count">0 Kinder</span>
+  </div>
+  <div class="add-row">
+    <input class="add-input" id="name-input" type="text" placeholder="Name eintragen …" onkeydown="if(event.key==='Enter')addChild()">
+    <button class="add-btn" onclick="addChild()">+</button>
+  </div>
+  <div class="cat-row" id="cat-row" style="display:none;">
+    <div class="cat-head"><span>👁️</span>Aufmerksamkeit</div>
+    <div class="cat-head"><span>💡</span>Lernerfolg</div>
+    <div class="cat-head"><span>🤝</span>Mitmachen</div>
+  </div>
+  <div id="children-list">
+    <div class="empty-state">Noch keine Kinder – Name eingeben und + tippen!</div>
+  </div>
+  <div class="summary" id="summary">
+    <div class="summary-row">
+      <div class="summary-pill"><div class="dot dot-g"></div><div><div class="pill-num" id="sum-high">0</div><div class="pill-lbl">Läuft super</div></div></div>
+      <div class="summary-pill"><div class="dot dot-y"></div><div><div class="pill-num" id="sum-mid">0</div><div class="pill-lbl">Im Mittelfeld</div></div></div>
+      <div class="summary-pill"><div class="dot dot-r"></div><div><div class="pill-num" id="sum-low">0</div><div class="pill-lbl">Aufmerksamkeit</div></div></div>
+    </div>
+  </div>
+  <div class="notes-section">
+    <div class="notes-title">💫 Notizen zur Stunde</div>
+    <textarea class="notes-ta" id="notes" rows="3" placeholder="Was lief gut? Besondere Momente …" oninput="saveData()"></textarea>
+  </div>
+  <div class="bottom-btns">
+    <button class="save-btn" onclick="saveData();showToast('✅ Gespeichert!')">💾 Speichern</button>
+    <button class="sec-btn" onclick="window.print()">🖨️</button>
+    <button class="sec-btn" onclick="resetRatings()">↺</button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+let children = [];
+const KEY = 'filmag_obs_v3';
+const EM = ['·','😕','🙁','😐','🙂','😄'];
+
+function load() {
+  try {
+    const d = JSON.parse(localStorage.getItem(KEY)||'{}');
+    children = d.children||[];
+    document.getElementById('session-name').value = d.session||'';
+    document.getElementById('notes').value = d.notes||'';
+  } catch(e){}
+  render();
+}
+
+function save() {
+  try { localStorage.setItem(KEY, JSON.stringify({ children, session: document.getElementById('session-name').value, notes: document.getElementById('notes').value })); } catch(e){}
+  updateSummary();
+}
+
+function ini(n){ return n.split(' ').map(w=>w[0]||'').join('').toUpperCase().slice(0,2); }
+
+function avgLbl(s){
+  const f=s.filter(x=>x>0);
+  if(!f.length) return 'none';
+  const a=f.reduce((x,y)=>x+y,0)/f.length;
+  return a>=3.5?'high':a>=2?'mid':'low';
+}
+
+function addChild(){
+  const inp=document.getElementById('name-input');
+  const n=inp.value.trim();
+  if(!n) return;
+  children.push({name:n,scores:[0,0,0]});
+  inp.value=''; inp.focus();
+  render(); save();
+}
+
+function removeChild(i){ children.splice(i,1); render(); save(); }
+
+function setScore(ci,cat,val){
+  children[ci].scores[cat]=val;
+  const card=document.getElementById('c'+ci);
+  if(card) card.dataset.avg=avgLbl(children[ci].scores);
+  const em=document.getElementById('e'+ci+'_'+cat);
+  if(em) em.textContent=EM[val];
+  save();
+}
+
+function render(){
+  const list=document.getElementById('children-list');
+  const catRow=document.getElementById('cat-row');
+  document.getElementById('child-count').textContent=children.length+(children.length===1?' Kind':' Kinder');
+  if(!children.length){
+    list.innerHTML='<div class="empty-state">Noch keine Kinder – Name eingeben und + tippen!</div>';
+    catRow.style.display='none';
+    document.getElementById('summary').style.display='none';
+    return;
+  }
+  catRow.style.display='grid';
+  document.getElementById('summary').style.display='block';
+  list.innerHTML=children.map((c,i)=>`
+    <div class="child-card" id="c${i}" data-avg="${avgLbl(c.scores)}">
+      <div class="child-top">
+        <div class="child-avatar">${ini(c.name)}</div>
+        <div class="child-name-text">${c.name}</div>
+        <button class="delete-btn" onclick="removeChild(${i})">✕</button>
+      </div>
+      <div class="sliders-row">
+        ${[0,1,2].map(cat=>`
+          <div class="slider-col">
+            <div class="slider-emoji" id="e${i}_${cat}">${EM[c.scores[cat]]}</div>
+            <input type="range" class="sl-${c.scores[cat]}" min="0" max="5" value="${c.scores[cat]}"
+              oninput="setScore(${i},${cat},parseInt(this.value));this.className='sl-'+this.value;">
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+  updateSummary();
+}
+
+function updateSummary(){
+  let h=0,m=0,l=0;
+  children.forEach(c=>{ const a=avgLbl(c.scores); if(a==='high')h++; else if(a==='mid')m++; else if(a==='low')l++; });
+  document.getElementById('sum-high').textContent=h;
+  document.getElementById('sum-mid').textContent=m;
+  document.getElementById('sum-low').textContent=l;
+}
+
+function resetRatings(){
+  if(!confirm('Bewertungen zurücksetzen?')) return;
+  children.forEach(c=>c.scores=[0,0,0]);
+  render(); save(); showToast('↺ Zurückgesetzt');
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+document.getElementById('session-name').addEventListener('input',save);
+load();
+</script>
+</body>
+</html>

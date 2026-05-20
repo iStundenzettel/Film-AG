@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arbeitsblatt – Praxis</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@700;800;900&family=DM+Sans:wght@400;500;700&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: #0f0f1a; padding: 20px 16px 60px; color: #fff; min-height: 100vh; }
+  .wrap { max-width: 680px; margin: 0 auto; }
+  .header { background: linear-gradient(135deg, #0284c7 0%, #059669 100%); border-radius: 20px; padding: 24px 22px 20px; margin-bottom: 20px; text-align: center; }
+  .header .emoji { font-size: 2.5rem; display: block; margin-bottom: 8px; }
+  .header h1 { font-family: 'Outfit', sans-serif; font-size: 1.5rem; font-weight: 900; color: #fff; margin-bottom: 4px; }
+  .header p { font-size: 0.85rem; color: rgba(255,255,255,0.8); }
+  .name-box { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+  .name-box label { font-size: 0.85rem; font-weight: 700; color: rgba(255,255,255,0.6); white-space: nowrap; }
+  .name-box input { flex: 1; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 8px 12px; color: #fff; font-size: 0.9rem; font-family: 'DM Sans', sans-serif; outline: none; }
+  .section-label { font-size: 0.68rem; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; color: #7dd3fc; margin: 24px 0 10px; display: flex; align-items: center; gap: 8px; }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: rgba(125,211,252,0.3); }
+  .q-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 18px; margin-bottom: 14px; }
+  .q-num { font-size: 0.68rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #7dd3fc; margin-bottom: 8px; }
+  .q-text { font-size: 0.96rem; font-weight: 700; color: #fff; line-height: 1.4; margin-bottom: 14px; }
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .option { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.04); border: 1.5px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 10px 14px; cursor: pointer; transition: all 0.2s; user-select: none; }
+  .option.selected { background: rgba(2,132,199,0.15); border-color: #0284c7; }
+  .option.correct { background: rgba(16,185,129,0.2); border-color: #10b981; }
+  .option.wrong { background: rgba(239,68,68,0.15); border-color: #ef4444; }
+  .option-circle { width: 24px; height: 24px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; }
+  .option.selected .option-circle { border-color: #0284c7; background: #0284c7; color: #fff; }
+  .option.correct .option-circle { border-color: #10b981; background: #10b981; color: #fff; }
+  .option.wrong .option-circle { border-color: #ef4444; background: #ef4444; color: #fff; }
+  .option-text { font-size: 0.88rem; color: rgba(255,255,255,0.85); line-height: 1.4; }
+  .feedback { display: none; margin-top: 10px; padding: 10px 14px; border-radius: 10px; font-size: 0.84rem; line-height: 1.5; }
+  .feedback.show { display: block; }
+  .feedback.ok { background: rgba(16,185,129,0.12); border-left: 3px solid #10b981; color: #6ee7b7; }
+  .feedback.nok { background: rgba(239,68,68,0.12); border-left: 3px solid #ef4444; color: #fca5a5; }
+  .write-card, .sort-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 18px; margin-bottom: 14px; }
+  .write-card .q-num { color: #a78bfa; }
+  .sort-card .q-num { color: #7dd3fc; }
+  .sort-items { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+  .sort-item { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 10px 14px; }
+  .sort-num-input { width: 36px; height: 36px; background: rgba(2,132,199,0.15); border: 1.5px solid rgba(2,132,199,0.4); border-radius: 8px; color: #7dd3fc; font-size: 1rem; font-weight: 800; text-align: center; outline: none; font-family: 'Outfit', sans-serif; flex-shrink: 0; }
+  .write-card textarea { width: 100%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 10px 14px; color: #fff; font-size: 0.88rem; font-family: 'DM Sans', sans-serif; resize: none; outline: none; margin-top: 10px; line-height: 1.6; }
+  .hint { font-size: 0.78rem; color: rgba(255,255,255,0.4); margin-top: 6px; font-style: italic; }
+  .btn-row { display: flex; gap: 10px; margin-top: 20px; }
+  .submit-btn { flex: 1; background: linear-gradient(135deg, #0284c7, #059669); border: none; border-radius: 14px; padding: 16px; color: #fff; font-family: 'Outfit', sans-serif; font-size: 1rem; font-weight: 800; cursor: pointer; }
+  .print-btn { background: rgba(255,255,255,0.08); border: 1.5px solid rgba(255,255,255,0.2); border-radius: 14px; padding: 16px 20px; color: rgba(255,255,255,0.8); font-family: 'Outfit', sans-serif; font-size: 0.9rem; font-weight: 700; cursor: pointer; }
+  .result-box { display: none; background: rgba(255,255,255,0.05); border: 1.5px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 24px; text-align: center; margin-top: 20px; }
+  .result-box.show { display: block; }
+  .result-emoji { font-size: 3rem; display: block; margin-bottom: 10px; }
+  .result-score { font-family: 'Outfit', sans-serif; font-size: 2rem; font-weight: 900; color: #7dd3fc; }
+  .result-text { font-size: 0.9rem; color: rgba(255,255,255,0.7); margin-top: 6px; line-height: 1.6; }
+  .reset-btn { margin-top: 16px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 8px 24px; color: rgba(255,255,255,0.7); font-size: 0.84rem; font-weight: 700; cursor: pointer; }
+  @media print {
+    body { background: #fff; color: #000; padding: 10mm; }
+    .header { background: #0284c7 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .btn-row, .reset-btn, .feedback, .result-box { display: none !important; }
+    .q-card, .write-card, .sort-card, .name-box { background: #f9f9f9 !important; border: 1px solid #ddd !important; color: #000 !important; }
+    .q-text, .option-text { color: #000 !important; }
+    .option { border: 1px solid #ccc !important; background: #fff !important; }
+    textarea { border: 1px solid #ccc !important; background: #fff !important; color: #000 !important; min-height: 60px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <span class="emoji">🎥</span>
+    <h1>Arbeitsblatt – Praxis</h1>
+    <p>Kamera an – jetzt wird gefilmt! 🎬</p>
+    <div style="margin-top:16px;display:flex;flex-direction:column;align-items:center;gap:8px;">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://6t72czvbdp-skizze.github.io/Film-ag/arbeitsblatt-praxis.html&bgcolor=ffffff&color=000000" style="border-radius:10px;width:110px;height:110px;">
+      <div style="font-size:0.75rem;color:rgba(255,255,255,0.7);">Mit iPad einscannen</div>
+    </div>
+  </div>
+  <div class="name-box"><label>👤 Name:</label><input type="text" placeholder="Dein Name hier ..."></div>
+
+  <div class="section-label">🎯 Teil 1 – Wissen testen</div>
+
+  <div class="q-card">
+    <div class="q-num">Frage 1 von 4</div>
+    <div class="q-text">Was ist beim Filmen mit dem iPad besonders wichtig?</div>
+    <div class="options">
+      <div class="option" onclick="sel(this,1,false)"><div class="option-circle">A</div><div class="option-text">Das iPad immer hochkant halten.</div></div>
+      <div class="option" onclick="sel(this,1,true)"><div class="option-circle">B</div><div class="option-text">Querformat, ruhige Hand, gutes Licht und deutlich sprechen.</div></div>
+      <div class="option" onclick="sel(this,1,false)"><div class="option-circle">C</div><div class="option-text">So nah wie möglich ans Motiv herangehen.</div></div>
+    </div>
+    <div class="feedback" id="fb1"></div>
+  </div>
+
+  <div class="q-card">
+    <div class="q-num">Frage 2 von 4</div>
+    <div class="q-text">Was ist ein Selfie-Video?</div>
+    <div class="options">
+      <div class="option" onclick="sel(this,2,true)"><div class="option-circle">A</div><div class="option-text">Ein kurzes Video das man von sich selbst aufnimmt – gut zum Üben vor der Kamera.</div></div>
+      <div class="option" onclick="sel(this,2,false)"><div class="option-circle">B</div><div class="option-text">Ein Video von einem Selfie-Stick.</div></div>
+      <div class="option" onclick="sel(this,2,false)"><div class="option-circle">C</div><div class="option-text">Ein Foto das sich bewegt.</div></div>
+    </div>
+    <div class="feedback" id="fb2"></div>
+  </div>
+
+  <div class="q-card">
+    <div class="q-num">Frage 3 von 4</div>
+    <div class="q-text">Was tust du wenn eine Aufnahme nicht gut geworden ist?</div>
+    <div class="options">
+      <div class="option" onclick="sel(this,3,false)"><div class="option-circle">A</div><div class="option-text">Die schlechte Aufnahme trotzdem verwenden.</div></div>
+      <div class="option" onclick="sel(this,3,false)"><div class="option-circle">B</div><div class="option-text">Aufhören und jemand anderen fragen.</div></div>
+      <div class="option" onclick="sel(this,3,true)"><div class="option-circle">C</div><div class="option-text">Nochmal aufnehmen – mehrere Versuche sind immer erlaubt!</div></div>
+    </div>
+    <div class="feedback" id="fb3"></div>
+  </div>
+
+  <div class="q-card">
+    <div class="q-num">Frage 4 von 4</div>
+    <div class="q-text">Was bedeutet „konstruktives Feedback"?</div>
+    <div class="options">
+      <div class="option" onclick="sel(this,4,true)"><div class="option-circle">A</div><div class="option-text">Sagen was gut war und was man verbessern kann – freundlich und hilfreich.</div></div>
+      <div class="option" onclick="sel(this,4,false)"><div class="option-circle">B</div><div class="option-text">Alles kritisieren was schlecht war.</div></div>
+      <div class="option" onclick="sel(this,4,false)"><div class="option-circle">C</div><div class="option-text">Immer sagen dass alles perfekt war.</div></div>
+    </div>
+    <div class="feedback" id="fb4"></div>
+  </div>
+
+  <div class="section-label">🔢 Teil 2 – Richtige Reihenfolge</div>
+
+  <div class="sort-card">
+    <div class="q-num">Aufgabe 5</div>
+    <div class="q-text">Bringe die Schritte einer Praxisstunde in die richtige Reihenfolge.</div>
+    <div class="sort-items">
+      <div class="sort-item"><input class="sort-num-input" type="number" min="1" max="5" placeholder="?"><span style="font-size:0.88rem;color:rgba(255,255,255,0.85);">Videos gemeinsam anschauen & Feedback</span></div>
+      <div class="sort-item"><input class="sort-num-input" type="number" min="1" max="5" placeholder="?"><span style="font-size:0.88rem;color:rgba(255,255,255,0.85);">Selfie-Video aufnehmen</span></div>
+      <div class="sort-item"><input class="sort-num-input" type="number" min="1" max="5" placeholder="?"><span style="font-size:0.88rem;color:rgba(255,255,255,0.85);">Video schneiden & speichern</span></div>
+      <div class="sort-item"><input class="sort-num-input" type="number" min="1" max="5" placeholder="?"><span style="font-size:0.88rem;color:rgba(255,255,255,0.85);">Kamera-Grundlagen erklären</span></div>
+      <div class="sort-item"><input class="sort-num-input" type="number" min="1" max="5" placeholder="?"><span style="font-size:0.88rem;color:rgba(255,255,255,0.85);">Partnerarbeit – gegenseitig filmen</span></div>
+    </div>
+  </div>
+
+  <div class="section-label">✏️ Teil 3 – Reflexion</div>
+
+  <div class="write-card">
+    <div class="q-num">Aufgabe 6</div>
+    <div class="q-text">Was war für dich beim Filmen am schwierigsten? Wie hast du das gelöst?</div>
+    <textarea rows="4" placeholder="Am schwierigsten war für mich ...&#10;Ich habe das gelöst indem ich ..."></textarea>
+  </div>
+
+  <div class="write-card">
+    <div class="q-num">Aufgabe 7</div>
+    <div class="q-text">Schreibe drei Tipps für jemanden der zum ersten Mal mit dem iPad filmt.</div>
+    <textarea rows="5" placeholder="Tipp 1: Achte darauf, dass ...&#10;Tipp 2: Vergiss nicht ...&#10;Tipp 3: Am besten ist es wenn ..."></textarea>
+  </div>
+
+  <div class="write-card">
+    <div class="q-num">Aufgabe 8 – Zusatz ⭐</div>
+    <div class="q-text">Welche Kameraposition findest du am interessantesten – und warum? (z.B. Froschperspektive, Vogelperspektive, Augenhöhe)</div>
+    <textarea rows="3" placeholder="Am interessantesten finde ich ... weil ..."></textarea>
+    <div class="hint">💡 Verschiedene Perspektiven erzeugen verschiedene Gefühle beim Zuschauer!</div>
+  </div>
+
+  <div class="btn-row">
+    <button class="submit-btn" onclick="auswerten()">🎥 Auswerten</button>
+    <button class="print-btn" onclick="window.print()">🖨️ Als PDF drucken</button>
+  </div>
+  <div class="result-box" id="result">
+    <span class="result-emoji" id="result-emoji">⭐</span>
+    <div class="result-score" id="result-score"></div>
+    <div class="result-text" id="result-text"></div>
+    <button class="reset-btn" onclick="location.reload()">↩ Nochmal versuchen</button>
+  </div>
+</div>
+<script>
+  const answers={};const correct={1:'B',2:'A',3:'C',4:'A'};
+  const feedbacks={
+    1:{ok:'✅ Richtig! Querformat, ruhige Hand, Licht und deutlich sprechen.',nok:'❌ Querformat, ruhige Hand, gutes Licht und deutlich sprechen – Antwort B.'},
+    2:{ok:'✅ Genau! Ein Selfie-Video ist perfekt zum Üben vor der Kamera.',nok:'❌ Ein Selfie-Video nimmt man von sich selbst auf – super zum Üben. Antwort A.'},
+    3:{ok:'✅ Super! Einfach nochmal aufnehmen – mehrere Versuche sind erlaubt!',nok:'❌ Nochmal aufnehmen – Fehler gehören dazu! Antwort C.'},
+    4:{ok:'✅ Richtig! Freundlich sagen was gut war und was man verbessern kann.',nok:'❌ Konstruktives Feedback ist freundlich und hilfreich – Antwort A.'},
+  };
+  function sel(el,qNum,isCorrect){el.parentElement.querySelectorAll('.option').forEach(o=>o.classList.remove('selected'));el.classList.add('selected');answers[qNum]={el,isCorrect};}
+  function auswerten(){
+    let score=0;
+    for(let i=1;i<=4;i++){const fb=document.getElementById('fb'+i);if(answers[i]){const{el,isCorrect}=answers[i];el.parentElement.querySelectorAll('.option').forEach(o=>o.classList.remove('selected'));if(isCorrect){el.classList.add('correct');score++;fb.className='feedback show ok';fb.textContent=feedbacks[i].ok;}else{el.classList.add('wrong');fb.className='feedback show nok';fb.textContent=feedbacks[i].nok;el.parentElement.querySelectorAll('.option').forEach(o=>{if(o.querySelector('.option-circle').textContent===correct[i])o.classList.add('correct');});}}else{fb.className='feedback show nok';fb.textContent='⚠️ Diese Frage wurde nicht beantwortet.';}}
+    const result=document.getElementById('result');result.classList.add('show');
+    document.getElementById('result-score').textContent=score+' von 4 Multiple-Choice richtig';
+    if(score===4){document.getElementById('result-emoji').textContent='🏆';document.getElementById('result-text').textContent='Perfekt! Du bist bereit für den ersten echten Drehtag!';}
+    else if(score>=2){document.getElementById('result-emoji').textContent='⭐';document.getElementById('result-text').textContent='Gut gemacht! Schau dir die falschen Antworten nochmal an.';}
+    else{document.getElementById('result-emoji').textContent='💪';document.getElementById('result-text').textContent='Schau dir die Themen nochmal an – du schaffst das!';}
+    result.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
+</script>
+</body>
+</html>
